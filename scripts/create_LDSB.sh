@@ -8,6 +8,7 @@ DATESTAMP=`date +%Y-%m-%dT%H:%M:%SZ`
 LDSB=/tmp/LDSB$DATESTAMP
 LDSB_filename=LDSB.tgz
 VERSION_filename=version
+INITPWD=$PWD
 
 # assume the first argument is the subject URI
 SUBJECT=$1
@@ -43,8 +44,8 @@ create_previous_LDSB() {
   wget $SUBJECT_LDSB -O LDSB_prev.tgz 
   tar -ztf LDSB_prev.tgz >> /dev/null
   if [ $? -eq 0 ] ; then
-    echo "valid LDSB"
-    PREVVERSION=`ldsb_version.sh file:///$LDSB/LDSB_prev.tgz`
+    PREVVERSION=`$INITPWD/ldsb_version.sh $LDSB/LDSB_prev.tgz`
+    echo $PREVVERSION
     VERSION=$((PREVVERSION+1))
   else
     echo "invalid LDSB, generating empty version "

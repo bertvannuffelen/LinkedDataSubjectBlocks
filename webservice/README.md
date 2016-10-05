@@ -5,6 +5,7 @@ Assume docker is installed.
 
 Let LOCALDIR be this directory.
 
+`` docker build . -t ldsb-proxy ``
 
 starts the service name ldsb
 ``docker run --rm -p 80:80 -v $LOCALDIR/scripts:/scripts --name=ldsb ldsb-proxy ``
