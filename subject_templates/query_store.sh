@@ -1,7 +1,4 @@
 #!/bin/bash
-set -x
-
-
 
 TEMPLATE=$1 
 SUBJECT=$2
@@ -18,8 +15,10 @@ QUERY=`cat /tmp/template.rq`
 
 curl -H "Accept: text/turtle" \
     --data-urlencode query="$QUERY" \
-    -o subject.ttl \
+    -o /tmp/subject.ttl \
    $SPARQLENDPOINT
+
+rapper -i turtle -o ntriples /tmp/subject.ttl > subject.nt
 
 # cleanup tmp
 rm /tmp/template.rq
