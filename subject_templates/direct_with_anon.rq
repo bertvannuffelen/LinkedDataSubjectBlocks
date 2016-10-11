@@ -1,0 +1,18 @@
+# rule 2
+# select the direct information and the information about
+# those objects having an anonymous node (1 level deep)
+
+
+construct {
+	<SUBJECT> ?p ?o.
+        ?o ?op ?oo.
+} 
+where {
+
+	<SUBJECT> ?p ?o.
+        OPTIONAL {
+         filter (anon(?o)).
+         ?o ?op ?oo.
+        }
+}
+

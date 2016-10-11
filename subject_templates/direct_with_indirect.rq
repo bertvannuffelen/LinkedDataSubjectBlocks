@@ -1,0 +1,15 @@
+# rule 4
+# select the direct information and
+# the referring information (if any)
+
+
+construct {
+	<SUBJECT> ?p ?o
+        ?s ?sp <SUBJECT>.
+
+where {
+
+	<SUBJECT> ?p ?o.
+        Optional { ?s ?sp <SUBJECT>. }
+}
+
