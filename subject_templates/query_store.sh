@@ -1,6 +1,7 @@
 #!/bin/bash
+set -x
 
-ROQET=roqet
+
 
 TEMPLATE=$1 
 SUBJECT=$2
@@ -11,7 +12,14 @@ sed -i "s SUBJECT $2 g" /tmp/template.rq
 
 QUERY=`cat /tmp/template.rq`
 
-$ROQET -i sparql -p $SPARQLENDPOINT -r ntriples -e "$QUERY"
+# roqet does not react properly
+# ROQET=roqet
+# $ROQET -i sparql -p $SPARQLENDPOINT -r turtle -e "$QUERY"
+
+curl -H "Accept: text/turtle" \
+    --data-urlencode query="$QUERY" \
+    -o subject.ttl \
+   $SPARQLENDPOINT
 
 # cleanup tmp
 rm /tmp/template.rq

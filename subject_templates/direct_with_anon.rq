@@ -11,7 +11,7 @@ where {
 
 	<SUBJECT> ?p ?o.
         OPTIONAL {
-         filter (anon(?o)).
+         filter (isblank(?o)).
          ?o ?op ?oo.
         }
 }

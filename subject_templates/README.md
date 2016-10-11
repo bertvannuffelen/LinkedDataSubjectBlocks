@@ -13,7 +13,12 @@ Execution
 
 ``./query_store.sh direct.rq http://dbpedia.org/resource/Belgium ``
 
+Examples
+`` ./query_store.sh direct_with_anon.rq http://dbpedia.org/resource/Belgium ``
+
 
 # TODO
 * The script is not yet suited for concurrent usages. 
 * Defaults and argument handling can be improved.
+
+

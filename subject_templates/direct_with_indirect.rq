@@ -4,9 +4,9 @@
 
 
 construct {
-	<SUBJECT> ?p ?o
+	<SUBJECT> ?p ?o.
         ?s ?sp <SUBJECT>.
-
+}
 where {
 
 	<SUBJECT> ?p ?o.

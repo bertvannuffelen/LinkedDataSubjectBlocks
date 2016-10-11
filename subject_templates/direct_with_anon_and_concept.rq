@@ -3,7 +3,7 @@
 # the information about those objects having an anonymous node (1 level deep) and
 # selected information about those objects that are SKOS:Concepts 
 #
-
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
 
 construct {
 	<SUBJECT> ?p ?o.
@@ -14,7 +14,7 @@ where {
 
 	<SUBJECT> ?p ?o.
         OPTIONAL {
-         filter (anon(?o)).
+         filter isblank(?o).
          ?o ?op ?oo.
         }
         OPTIONAL {
