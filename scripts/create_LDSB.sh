@@ -8,6 +8,7 @@ DATESTAMP=`date +%Y-%m-%dT%H:%M:%SZ`
 LDSB=/tmp/LDSB$DATESTAMP
 LDSB_filename=LDSB.tgz
 VERSION_filename=version
+MAPPING_filename=mapping
 INITPWD=$PWD
 
 # assume the first argument is the subject URI
@@ -19,10 +20,13 @@ UnversionedDOCUMENT=${SUBJECT/id/doc}
 
 SUBJECT_LDSB="$SUBJECT.ldsb"
 
+SUBJECTQUERYINTERFACE=$PWD/../subject_templates/query_store.sh
+SUBJECTTEMPLATE=$PWD/../subject_templates/direct_with_anon_and_concept.rq
 
 create_subject_file() {
   cd $LDSB
   touch subject.nt
+  $SUBJECTQUERYINTERFACE $SUBJECTTEMPLATE $SUBJECT
 }
 
 create_version_file() {
@@ -35,7 +39,23 @@ create_version_file() {
   echo "DOCUMENT=$DOCUMENT" >> $VERSION_filename
   echo "ISSUED=$DATESTAMP" >> $VERSION_filename
   # for each URI get the current DOCVERSION 
-  echo "MAP=\"$URI||$DOCVERSION\"" >> $VERSION_filename
+  echo "MAP=$MAPPING_filename" >> $VERSION_filename
+  # a readme on de version & mapping file should be included (self documentation)
+
+}
+
+create_version_mapping() {
+
+  FOUNDSubjects = `roqet -i sparql -r csv -D file://$PWD/subject.nt -e "select distinct ?s where {?s ?p ?o.}"`
+  FOUNDObjects  = `roqet -i sparql -r csv -D file://$PWD/subject.nt -e "select distinct ?o where {?s ?p ?o. filter(isIRI(?o)). }"`
+
+  for s in $FOUNDSubjects ; do
+     echo "$s" >> $MAPPING_filename
+     echo "||" >> $MAPPING_filename
+     $sVersion = `curl $s.latest_version`
+     Unversioneds=${s/id/doc}
+     echo "$Unversioneds.ldsb_v$sVersion\n" >> $MAPPING_filename
+  done
 
 }
 
