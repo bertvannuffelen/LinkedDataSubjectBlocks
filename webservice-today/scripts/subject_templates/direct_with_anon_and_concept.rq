@@ -1,0 +1,25 @@
+# rule 3
+# select the direct information and 
+# the information about those objects having an anonymous node (1 level deep) and
+# selected information about those objects that are SKOS:Concepts 
+#
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+
+construct {
+	<SUBJECT> ?p ?o.
+        ?o ?op ?oo.
+        ?o skos:prefLabel ?label.
+} 
+where {
+
+	<SUBJECT> ?p ?o.
+        OPTIONAL {
+         filter isblank(?o).
+         ?o ?op ?oo.
+        }
+        OPTIONAL {
+          ?o a skos:Concept.
+          ?o skos:prefLabel ?label.
+       }
+}
+

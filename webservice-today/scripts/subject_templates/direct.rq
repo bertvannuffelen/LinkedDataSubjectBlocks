@@ -1,0 +1,12 @@
+# rule 1
+# select only the direct information
+
+
+construct {
+	<SUBJECT> ?p ?o
+} 
+where {
+
+	<SUBJECT> ?p ?o.
+}
+

@@ -1,0 +1,18 @@
+# rule 1
+# select only the direct information
+# Metadata for the document
+
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX foaf:   <http://xmlns.com/foaf/0.1/> 
+
+construct {
+        <DOCUMENT> foaf:primaryTopic <SUBJECT>.
+        <DOCUMENT> dcterms:issued "NOW"^^xsd:dateTime .
+
+	<SUBJECT> ?p ?o.
+} 
+where {
+
+	<SUBJECT> ?p ?o.
+}
+
