@@ -20,8 +20,8 @@ LDSB="/www/tmp/$DATESTAMP/$SUBJECT"
 # derive the most recent version from a given URI
 get_subject() {
   cd $LDSB
-  SUBJECT_URI=http://ENV_URI_DOMAIN/id/$SUBJECT
-  /scripts/subject_templates/query_store.sh /scripts/subject_templates/document.rq $SUBJECT_URI
+  SUBJECT_URI=http://ENV_URI_DOMAIN/id/$SUBJECT 
+  /scripts/subject_templates/query_store.sh /scripts/subject_templates/document.rq $SUBJECT_URI $LDSB
   if [ $? -eq 0 ] ; then
     case $format in
       nt) TARGET=$LDSB/subject.nt

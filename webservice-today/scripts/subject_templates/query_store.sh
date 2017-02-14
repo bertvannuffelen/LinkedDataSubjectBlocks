@@ -4,7 +4,10 @@ TEMPLATE=$1
 SUBJECT=$2
 #SPARQLENDPOINT=http://13.93.84.96:8890/sparql
 SPARQLENDPOINT=ENV_SPARQL_ENDPOINT_SERVICE_URL
-TMP=/scripts/tmp
+TMP=$3
+if [ "$TMP" = "" ] ; then
+   TMP=/scripts/tmp
+fi
 
 DOCUMENT=${SUBJECT/id/doc}
 DATESTAMP=`date +%Y-%m-%dT%H:%M:%SZ`
