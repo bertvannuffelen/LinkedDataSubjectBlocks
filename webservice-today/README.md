@@ -32,10 +32,15 @@ Assume docker is installed.
 
 Let LOCALDIR be this directory.
 
-`` docker build . -t ldsb-proxy ``
+`` docker build . -t subjectblocks``
 
 starts the service name ldsb
-``docker run --rm -p 80:80 -v $LOCALDIR/scripts:/scripts --name=ldsb ldsb-proxy ``
+``
+   docker run -p81:80 -d --name ldsb \
+   -v /home/vagrant/OSLO/github/LinkedDataSubjectBlocks/webservice-today/logs:/logs \
+   --add-host sparql-endpoint-service:13.93.84.96 
+   subjectblocks 
+``
 
 quickest way to stop the service
 ``docker exec -it ldsb service apache2 stop ``
