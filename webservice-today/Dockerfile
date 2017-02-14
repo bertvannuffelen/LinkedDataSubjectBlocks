@@ -32,7 +32,7 @@ COPY config/httpd-vhosts.conf /usr/local/apache2/conf/extra/httpd-vhosts.conf
 
 # scripts directory is the cgi-bin for the config
 ADD scripts /scripts
-RUN chmod -R 555 /scripts & chmod 666 /scripts/tmp
+RUN chmod -R 555 /scripts && mkdir -p /scripts/tmp && chmod 666 /scripts/tmp
 
 # www directory holds the document root
 ADD www /www
