@@ -16,10 +16,12 @@ fi
 SUBJECT_LDSB="file:///www/storage/$SUBJECT/LDSB.tgz"
 LDSB="/www/tmp/$DATESTAMP/$SUBJECT"
 
+
 # derive the most recent version from a given URI
 get_subject() {
   cd $LDSB
-  /scripts/subject_templates/query_store.sh /scripts/subject_templates/document.rq http://data.vlaanderen.be/id/$SUBJECT
+  SUBJECT_URI=http://ENV_URI_DOMAIN/id/$SUBJECT
+  /scripts/subject_templates/query_store.sh /scripts/subject_templates/document.rq $SUBJECT_URI
   if [ $? -eq 0 ] ; then
     case $format in
       nt) TARGET=$LDSB/subject.nt
@@ -49,7 +51,7 @@ redirect() {
 echo "Content-type: text/html"
 #if [ $SUCCESS == 0 ] ; then
    echo "Status: 303 See Other"
-   echo "Location: http://ldsb-data.vlaanderen.be$TARGET"
+   echo "Location: ENV_SERVERNAME$TARGET"
 #else
 #   echo "Status: 404 Condition Intercepted"
 #fi
@@ -83,8 +85,9 @@ direct() {
 	;;
       json) 
    	 echo "Content-Type: application/json"
-       ;;
-      *) echo "Content-type: text/html"
+        ;;
+      *) 
+         echo "Content-type: text/html"
 	;;
     esac
 

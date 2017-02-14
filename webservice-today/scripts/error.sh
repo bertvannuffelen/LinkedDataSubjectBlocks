@@ -11,7 +11,7 @@ urldecode() {
 
 echo "Content-type: text/html"
 echo "Status: 303 See Other"
-echo "Location: http://data.vlaanderen.be/www/tmp/2016-10-04/address/1111/subject.nt"
+echo "Location: ENV_SERVERNAME/www/tmp/2016-10-04/address/1111/subject.nt"
 echo ""
 echo '<html>'
 echo '<head>'
@@ -63,7 +63,7 @@ echo '<body>'
 
 
 echo "Deze uri: "
-echo "http://data.vlaanderen.be$REDIRECT_URL"
+echo "http://ENV_URI_DOMAIN$REDIRECT_URL"
 echo " voldoet niet aan de VO URI strategie."
 echo "\n"
 

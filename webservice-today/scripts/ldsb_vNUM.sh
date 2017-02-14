@@ -63,7 +63,7 @@ echo "Content-type: text/html"
 case $SUCCESS in
    0) 
    	echo "Status: 303 See Other"
-   	echo "Location: http://data.vlaanderen.be$TARGET"
+   	echo "Location: http://ENV_URI_DOMAIN$TARGET"
 	;;
    1)
 	echo "Status: 404 NOT FOUND"

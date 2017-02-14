@@ -1,3 +1,24 @@
+
+
+## Architectural embedding
+The service connects to other services, which should be declared as accessible hosts:
+
+* sparql-endpoint-service : SPARQL endpoint
+
+The service URLs are given by the following environment variables
+
+| Environment variable | default value |
+| -------------------- | ------------- |
+| ENV_SPARQL_ENDPOINT_SERVICE_URL    | http://sparql-endpoint-service:8890/sparql |
+
+## Configuration
+
+| Environment variable | default value |
+| -------------------- | ------------- |
+| ENV_URI_DOMAIN | data.vlaanderen.be |
+| ENV_SERVERNAME | ldsb-data.vlaanderen.be |
+
+
 Building & Development statements
 =================================
 Assume docker is installed.
