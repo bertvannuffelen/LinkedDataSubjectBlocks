@@ -1,3 +1,9 @@
+Webservice today
+================
+
+This container offers Linked Data Subject pages based on a sparql endpoint based on the 
+current view of the item. It does not support chains as a Linked Data Subject Block chain is intended to do.
+However, it implements the urls that are to be supported to retrieve the information in different serializations.
 
 
 ## Architectural embedding
