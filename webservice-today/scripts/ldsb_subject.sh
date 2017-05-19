@@ -15,6 +15,7 @@ if [ "$SUBJECT" = "" ] ; then
 fi
 SUBJECT_LDSB="file:///www/storage/$SUBJECT/LDSB.tgz"
 LDSB="/www/tmp/$DATESTAMP/$SUBJECT"
+JSONLD=/scripts/jsonld-java/bin/jsonldplayground
 
 
 # derive the most recent version from a given URI
@@ -34,6 +35,9 @@ get_subject() {
 	;;
       json) rapper -i ntriples -o json subject.nt > subject.json
            TARGET=$LDSB/subject.json
+	;;
+      jsonld) $JSONLD --process fromrdf -format jsonld --inputFile subject.nt > subject.jsonld
+           TARGET=$LDSB/subject.jsonld
         ;;
       *) TARGET=$LDSB/subject.nt
 	;;

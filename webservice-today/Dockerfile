@@ -13,7 +13,10 @@ FROM httpd:2.4
 
 # install additional software
 # do this first to get a more stable image
-RUN apt-get update && apt-get -y install curl raptor2-utils && apt-get clean  && rm -rf /var/lib/apt/lists/*
+RUN echo "deb http://deb.debian.org/debian jessie-backports main" >> /etc/apt/sources.list
+RUN apt-get update && apt-get -y install curl raptor2-utils 
+RUN apt install -y -t jessie-backports  openjdk-8-jre-headless ca-certificates-java
+RUN apt-get clean  && rm -rf /var/lib/apt/lists/*
 
 # make logs persistent in /logs
 RUN mkdir -p /logs && chmod -R 666 /logs
