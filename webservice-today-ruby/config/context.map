@@ -1,0 +1,4 @@
+contextmap[adres]="http://data.vlaanderen.be/context/adres.jsonld"
+contextmap[straatnaam]="http://data.vlaanderen.be/context/adres.jsonld"
+contextmap[gebouw]="http://data.vlaanderen.be/context/gebouw.jsonld"
+contextmap[organisatie]="http://data.vlaanderen.be/context/organisatie.jsonld"
