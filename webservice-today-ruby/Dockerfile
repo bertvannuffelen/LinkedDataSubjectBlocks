@@ -55,6 +55,7 @@ RUN mkdir -p /www/tmp && chmod 777 /www/tmp
 # these values can be overwritten at runtime
 
 ENV ENV_SERVERNAME ldsb-data.vlaanderen.be
+ENV ENV_URI_DOMAIN https://data.vlaanderen.be
 ENV ENV_URI_DOMAIN data.vlaanderen.be
 ENV ENV_SPARQL_ENDPOINT_SERVICE_URL http://sparql-endpoint-service:8890/sparql
 ENV ENV_CONTEXTMAP=file:///config/context.map

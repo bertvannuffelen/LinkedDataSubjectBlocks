@@ -21,7 +21,8 @@ The service URLs are given by the following environment variables
 
 | Environment variable | default value | comment |
 | -------------------- | ------------- | --------|
-| ENV_URI_DOMAIN | data.vlaanderen.be |
+| ENV_URI_PREFIX | https://data.vlaanderen.be | use prefix to cope with http/https issue 
+| ENV_URI_DOMAIN | data.vlaanderen.be | deprecated over ENV_URI_PREFIX
 | ENV_SERVERNAME | ldsb-data.vlaanderen.be |
 | ENV_LOGLOCAL   | false | set true to log on disk
 | ENV_CONTEXTMAP | file:///config/context.map| a mapping between the concepts and their jsonld context definition
