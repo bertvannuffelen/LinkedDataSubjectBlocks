@@ -1,0 +1,39 @@
+# rule 5
+# select the direct information and 
+# the information about those objects having an anonymous node (2 level deep) and
+# selected information about those objects that are SKOS:Concepts 
+#
+define input:default-graph-exclude <http://data.vlaanderen.be/id/dataset/muuuid>
+
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX foaf:   <http://xmlns.com/foaf/0.1/> 
+
+construct {
+        <DOCUMENT> foaf:primaryTopic <SUBJECT>.
+        <DOCUMENT> dcterms:issued "NOW"^^xsd:dateTime .
+
+	<SUBJECT> ?p ?o.
+        ?o ?op ?oo.
+        ?oo1 ?oop ?ooo. 
+        ?o skos:prefLabel ?label.
+} 
+where {
+
+	<SUBJECT> ?p ?o.
+        OPTIONAL {
+         filter isblank(?o).
+         ?o ?op ?oo.
+        }
+        OPTIONAL { 
+         filter isblank(?o). 
+         ?o ?op1 ?oo1. 
+         filter isblank(?oo1). 
+         ?oo1 ?oop ?ooo. 
+        } 
+        OPTIONAL {
+          ?o a skos:Concept.
+          ?o skos:prefLabel ?label.
+       }
+}
+
