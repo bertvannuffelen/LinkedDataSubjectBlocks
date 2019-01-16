@@ -40,7 +40,7 @@ serialize() {
 get_subject() {
   cd $LDSB
   SUBJECT_URI=ENV_URI_PREFIX/id/$SUBJECT 
-  /scripts/subject_templates/query_store.sh /scripts/subject_templates/direct_with_anon_level1_and_concept.rq $SUBJECT_URI $LDSB
+  /scripts/subject_templates/query_store.sh /scripts/subject_templates/direct_with_anonskolem_level1_and_concept.rq $SUBJECT_URI $LDSB
   if [ $? -eq 0 ] ; then
     if [ -s $LDSB/subject.nt ] ; then
     case $format in
