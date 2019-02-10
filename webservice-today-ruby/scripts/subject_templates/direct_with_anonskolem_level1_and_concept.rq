@@ -13,43 +13,59 @@ construct {
         <DOCUMENT> foaf:primaryTopic <SUBJECT>.
         <DOCUMENT> dcterms:issued "NOW"^^xsd:dateTime .
 
-	<SUBJECT> ?p ?o.
+    	<SUBJECT> ?p ?o.
         ?o ?op ?oo.
-        ?oo1 ?oop ?ooo. 
+        ?oo ?oop ?ooo. 
         ?o skos:prefLabel ?label.
       
         ?ss ?sp ?so.
         ?so skos:prefLabel ?label.
+
+   
 } 
 where {
-        {
-	<SUBJECT> ?p ?o.
-        OPTIONAL {
-         {
-           filter isblank(?o).
-         }
-         union {
-           filter (contains(str(?o), "well-known/genid")) .
-         }
-         ?o ?op ?oo.
-        }
-        OPTIONAL {{ 
-         filter isblank(?o). 
-         ?o ?op1 ?oo1. 
-         filter isblank(?oo1). 
-         ?oo1 ?oop ?ooo. 
-        } 
-        UNION { 
-           filter (contains(str(?o), "well-known/genid")) .
-         ?o ?op1 ?oo1. 
-           filter (contains(str(?oo1), "well-known/genid")) .
-         ?oo1 ?oop ?ooo. 
-        } }
-        OPTIONAL {
-          ?o a skos:Concept.
-          ?o skos:prefLabel ?label.
-       }}
-       UNION {
+       
+  {<SUBJECT> ?p ?o.}
+  union
+  { <SUBJECT> ?p ?o.
+    filter isblank(?o).
+    ?o ?op ?oo.
+       
+    
+  } union  {
+    <SUBJECT> ?p ?o.
+   
+     filter (contains(str(?o), "well-known/genid")) .
+    ?o ?op ?oo.
+  } union {
+    <SUBJECT> ?p ?o.
+    filter isblank(?o). 
+    ?o ?op ?oo. 
+    filter isblank(?oo). 
+    ?oo ?oop ?ooo. 
+  } union {
+    <SUBJECT> ?p ?o.
+    filter isblank(?o). 
+    ?o ?op ?oo. 
+    filter (contains(str(?oo), "well-known/genid")) .
+    ?oo ?oop ?ooo. 
+  } union {
+    <SUBJECT> ?p ?o.
+    filter (contains(str(?o), "well-known/genid")) .
+    ?o ?op ?oo. 
+    filter isblank(?oo). 
+    ?oo ?oop ?ooo. 
+  } union {
+    <SUBJECT> ?p ?o.
+    filter (contains(str(?o), "well-known/genid")) .
+    ?o ?op ?oo. 
+    filter (contains(str(?oo), "well-known/genid")) .
+    ?oo ?oop ?ooo. 
+  } union {
+    <SUBJECT> ?p ?o.
+    ?o a skos:Concept.
+    ?o skos:prefLabel ?label.
+  }   UNION {
         ?ss ?pp <SUBJECT>
         OPTIONAL {
          {
@@ -64,6 +80,6 @@ where {
           ?so skos:prefLabel ?label.
         }
         }
-     }
+    }
+   
 }
-
