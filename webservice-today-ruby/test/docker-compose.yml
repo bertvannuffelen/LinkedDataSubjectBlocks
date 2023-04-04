@@ -1,0 +1,34 @@
+version: "3.7"
+
+services:
+  ldsb:
+    image: bertvannuffelen/ldsb:3.0.0
+    environment:
+      ENV_URI_PREFIX: https://data.domain.com
+      ENV_URI_DOMAIN: data.domain.com 
+      ENV_SPARQL_VIRTUOSO: http://rdfstore:80
+      ENV_SPARQL_ENDPOINT_SERVICE_URL: http://rdfstore:80
+      ENV_SERVERNAME:  ldsb-data.domain.com
+      ENV_LOGLOCAL: "access"
+      ENV_QUERY: direct_with_anonskolem_level1_and_concept.rq
+      DOMAIN1: test.com
+      EMAIL1: x@x.com
+    ports:
+      - "80:80"
+    volumes:
+      - /etc/apache2:/data
+    networks:
+      - localnetwork
+  rdfstore:
+    image: test:1.0.0
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      TESTSERVICENAME: rdfstore
+    ports:
+      - "9000:80"
+    networks:
+      - localnetwork
+        # a network ensures that the services are visible to eachother
+networks:
+  localnetwork: {}

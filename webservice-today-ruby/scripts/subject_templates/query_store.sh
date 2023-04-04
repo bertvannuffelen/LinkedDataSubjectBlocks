@@ -2,8 +2,19 @@
 
 TEMPLATE=$1 
 SUBJECT=$2
-#SPARQLENDPOINT=http://13.69.8.72:8891/sparql
 SPARQLENDPOINT=ENV_SPARQL_ENDPOINT_SERVICE_URL
+
+export PATH=$PATH:/usr/local/bundle/bin
+#export RUBY_VERSION=3.2.1
+export BUNDLE_APP_CONFIG=/usr/local/bundle
+#export RUBY_MAJOR=3.2
+#HOME=/root
+#export LANG=C.UTF-8
+export BUNDLE_SILENCE_ROOT_WARNING=1
+export GEM_HOME=/usr/local/bundle
+
+RDFGEM=/usr/local/bundle/bin/rdf
+
 TMP=$3
 if [ "$TMP" = "" ] ; then
    TMP=/scripts/tmp

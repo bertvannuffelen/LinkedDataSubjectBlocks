@@ -13,22 +13,17 @@
 # use a variant of the official HTTPD container build on Debian Stretch
 # this is temporary until the official moves to it
 #FROM solsson/httpd-stretch
-FROM httpd:2.4-bullseye
+FROM ruby:3.2-bullseye
 
 # install additional software
 RUN apt-get update \
-    && apt-get install -y curl vim gpg bash ps-watcher
-#    && apt-get install -y ruby ruby-dev build-essential zlib1g-dev 
+    && apt-get install -y curl vim \
+    && apt-get install -y apache2
 
-# deploy the ruby linkeddata gem via the Ruby package manager
-RUN curl -sSL https://rvm.io/mpapis.asc | gpg --import -
-RUN curl -sSL https://rvm.io/pkuczynski.asc | gpg --import -
-RUN curl -sSL https://get.rvm.io | bash -s stable
+RUN gem install --no-user-install linkeddata
 
-RUN bash 
-ADD install.sh /
-RUN chmod 755 /install.sh \
-   && /install.sh
+RUN a2enmod proxy setenvif log_debug cgi proxy proxy_http rewrite env status
+RUN a2dissite 000-default
 
 
 RUN apt-get remove -y build-essential \
@@ -37,17 +32,22 @@ RUN apt-get remove -y build-essential \
     && rm -rf /var/lib/apt/lists/*
 
 # make logs persistent in /logs
-RUN mkdir -p /logs && chmod -R 666 /logs
+RUN mkdir -p /logs \
+    && chown -R www-data:www-data /logs \
+    && chmod -R 666 /logs
 
 # config directory holds the configuration
 ADD config /config
 ENV PATH /config/bin:$PATH
     # activates the necessary modules
-COPY config/httpd.conf /usr/local/apache2/conf/httpd.conf
+COPY config/apache2.conf /etc/apache2/apache2.conf
     # vhosts configuration:
     # aliases /scripts with cgi-bin
     # sets logs to point to /logs
-COPY config/httpd-vhosts.conf /usr/local/apache2/conf/extra/httpd-vhosts.conf
+COPY config/mods-enabled/*.conf /etc/apache2/mods-enabled/
+COPY config/conf-enabled/*.conf /etc/apache2/conf-enabled/
+COPY config/httpd-vhosts.conf /etc/apache2/sites-available/ldsb.conf
+RUN a2ensite ldsb.conf
 
 
 
@@ -57,7 +57,8 @@ RUN chmod -R 555 /scripts && mkdir -p /scripts/tmp && chmod 666 /scripts/tmp
 
 # www directory holds the document root
 ADD www /www
-RUN rm -rf /usr/local/apache2/htdocs && ln -s /www /usr/local/apache2/htdocs
+RUN rm -rf /var/www && ln -s /www /var/www
+#RUN rm -rf /usr/local/apache2/htdocs && ln -s /www /usr/local/apache2/htdocs
 RUN mkdir -p /www/tmp && chmod 777 /www/tmp
 
 
@@ -68,10 +69,21 @@ ENV ENV_SERVERNAME ldsb-data.vlaanderen.be
 ENV ENV_URI_PREFIX https://data.vlaanderen.be
 ENV ENV_URI_DOMAIN data.vlaanderen.be
 ENV ENV_SPARQL_ENDPOINT_SERVICE_URL http://sparql-endpoint-service:8890/sparql
-ENV ENV_CONTEXTMAP=file:///config/context.map
+ENV ENV_QUERY direct_with_anonskolem_level1_and_concept.rq
+ENV ENV_CONTEXTMAP file:///config/context.map
+ENV ENV_LOGLOCAL false
+
+
+#RUN chown -R www-data:www-data /scripts \
+#   && chown -R www-data:www-data /www \
+#   && chown -R www-data:www-data /etc/apache2 \
+#   && chown -R www-data:www-data /var/log/apache2 
+
+#USER www-data
+
 
 
 # redefine the start of the service to be incorporate the runtime configuration 
 # of environment variables
 # ENTRYPOINT ["/config/bin/start.sh"]
-CMD [ "bash -e" ]
+CMD ["/config/bin/start.sh"]

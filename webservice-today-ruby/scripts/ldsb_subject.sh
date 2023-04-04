@@ -1,6 +1,9 @@
 #!/bin/bash
 # NOTE: as cgi-script do not have any item written to STDOUT otherwise a 500 server error is being thrown
 
+export PATH=$PATH:/usr/local/bundle/bin
+export GEM_HOME=/usr/local/bundle
+
 #set -x
 #E=`env`
 
@@ -36,58 +39,111 @@ serialize() {
 
 }
 
+get_subject_from_cache() {
+    if [ -s $LDSB/subject.$format ] ; then
+            TARGET=$LDSB/subject.$format
+    else 
+    if [ -s $LDSB/subject.nt ] ; then
+        case $format in
+           nt) TARGET=$LDSB/subject.nt
+           ;;
+           ttl) 
+              FORMAT=turtle
+              TARGET=$LDSB/subject.$format
+              FILE=$LDSB/subject.nt
+              serialize
+           ;;
+           rdf) 
+              FORMAT=rdfxml
+              TARGET=$LDSB/subject.$format
+              FILE=$LDSB/subject.nt
+              serialize
+           ;;
+           json) 
+              FORMAT=rj
+              TARGET=$LDSB/subject.$format
+              FILE=$LDSB/subject.nt
+              serialize
+           ;;
+           jsonld) 
+              FORMAT=jsonld
+              TARGET=$LDSB/$TARGETFILE.$format
+              FILE=$LDSB/subject.nt
+              getcontext
+              CONTEXT=${contextmap[$CONCEPT]}
+              if [ -z $CONTEXT ] ; then
+                 echo "WARNING: no jsonld context found for $CONCEPT" 
+                 serialize
+              else 
+                 serialize_opt
+              fi
+           ;;
+           *) TARGET=$LDSB/subject.nt
+           ;;
+         esac
+    fi
+    fi
+      
+}
+
 # derive the most recent version from a given URI
 get_subject() {
+  get_subject_from_cache
+  if [ -z "$TARGET" ] ; then
   cd $LDSB
   SUBJECT_URI=ENV_URI_PREFIX/id/$SUBJECT 
-  /scripts/subject_templates/query_store.sh /scripts/subject_templates/direct_with_anonskolem_level1_and_concept.rq $SUBJECT_URI $LDSB
+  #/scripts/subject_templates/query_store.sh /scripts/subject_templates/direct_with_anonskolem_level1_and_concept.rq $SUBJECT_URI $LDSB
+  /scripts/subject_templates/query_store.sh /scripts/subject_templates/ENV_QUERY  $SUBJECT_URI $LDSB
   if [ $? -eq 0 ] ; then
     if [ -s $LDSB/subject.nt ] ; then
     case $format in
       nt) TARGET=$LDSB/subject.nt
-        ;;
+    ;;
       ttl) 
-	   FORMAT=turtle
-           TARGET=$LDSB/subject.$format
-	   FILE=subject.nt
-	   serialize
-	;;
+      FORMAT=turtle
+      TARGET=$LDSB/subject.$format
+      FILE=$LDSB/subject.nt
+      serialize
+   ;;
       rdf) 
-	   FORMAT=rdfxml
-           TARGET=$LDSB/subject.$format
-	   FILE=subject.nt
-	   serialize
-	;;
+      FORMAT=rdfxml
+      TARGET=$LDSB/subject.$format
+      FILE=$LDSB/subject.nt
+      serialize
+   ;;
       json) 
-	   FORMAT=rj
-           TARGET=$LDSB/subject.$format
-	   FILE=subject.nt
-	   serialize
-	;;
+      FORMAT=rj
+      TARGET=$LDSB/subject.$format
+      FILE=$LDSB/subject.nt
+      serialize
+   ;;
       jsonld) 
-	   FORMAT=jsonld
-           TARGET=$LDSB/$TARGETFILE.$format
-	   FILE=subject.nt
-           getcontext
-	   CONTEXT=${contextmap[$CONCEPT]}
-           if [ -z $CONTEXT ] ; then
-	      echo "WARNING: no jsonld context found for $CONCEPT" 
-	      serialize
-	   else 
-	      serialize_opt
-	   fi
+      FORMAT=jsonld
+      TARGET=$LDSB/$TARGETFILE.$format
+      FILE=$LDSB/subject.nt
+      getcontext
+      CONTEXT=${contextmap[$CONCEPT]}
+      if [ -z $CONTEXT ] ; then
+         echo "WARNING: no jsonld context found for $CONCEPT" 
+         serialize
+      else 
+         serialize_opt
+      fi
         ;;
       *) TARGET=$LDSB/subject.nt
-	;;
+   ;;
     esac
       
-    SUCCESS=0
+     SUCCESS=0
     else
-	SUCCESS=1
+     SUCCESS=1
     fi
   else
     SUCCESS=1
   fi
+  else
+    SUCCESS=0
+  fi 
 
 }
 
@@ -120,23 +176,23 @@ echo '</html>'
 direct() {
     case $format in
       nt) 
-   	 echo "Content-type: text/ntriples"
+       echo "Content-type: text/ntriples"
         ;;
       ttl) 
-   	 echo "Content-type: text/turtle"
-	;;
+       echo "Content-type: text/turtle"
+   ;;
       rdf) 
-   	 echo "Content-type: application/rdf+xml"
-	;;
+       echo "Content-type: application/rdf+xml"
+   ;;
       json) 
-   	 echo "Content-Type: application/json"
-	;;
+       echo "Content-Type: application/json"
+   ;;
       jsonld) 
-   	 echo "Content-Type: application/ld+json"
+       echo "Content-Type: application/ld+json"
         ;;
       *) 
          echo "Content-type: text/html"
-	;;
+   ;;
     esac
    
    case  $SUCCESS in

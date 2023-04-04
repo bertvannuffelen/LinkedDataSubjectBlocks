@@ -1,0 +1,85 @@
+# rule 6
+# select the direct information and 
+# the information about those objects having an anonymous node (2 level deep) and
+# selected information about those objects that are SKOS:Concepts 
+#
+define input:default-graph-exclude <http://data.vlaanderen.be/id/dataset/muuuid>
+
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX foaf:   <http://xmlns.com/foaf/0.1/> 
+
+construct {
+        <DOCUMENT> foaf:primaryTopic <SUBJECT>.
+        <DOCUMENT> dcterms:issued "NOW"^^xsd:dateTime .
+
+    	<SUBJECT> ?p ?o.
+        ?o ?op ?oo.
+        ?oo ?oop ?ooo. 
+        ?o ?skosconceptp ?skosconcepto.
+      
+        ?ss ?sp ?so.
+        ?so skos:prefLabel ?label.
+
+   
+} 
+where {
+       
+  {<SUBJECT> ?p ?o.}
+  union
+  { <SUBJECT> ?p ?o.
+    filter isblank(?o).
+    ?o ?op ?oo.
+       
+    
+  } union  {
+    <SUBJECT> ?p ?o.
+   
+     filter (contains(str(?o), "well-known/genid")) .
+    ?o ?op ?oo.
+  } union {
+    <SUBJECT> ?p ?o.
+    filter isblank(?o). 
+    ?o ?op ?oo. 
+    filter isblank(?oo). 
+    ?oo ?oop ?ooo. 
+  } union {
+    <SUBJECT> ?p ?o.
+    filter isblank(?o). 
+    ?o ?op ?oo. 
+    filter (contains(str(?oo), "well-known/genid")) .
+    ?oo ?oop ?ooo. 
+  } union {
+    <SUBJECT> ?p ?o.
+    filter (contains(str(?o), "well-known/genid")) .
+    ?o ?op ?oo. 
+    filter isblank(?oo). 
+    ?oo ?oop ?ooo. 
+  } union {
+    <SUBJECT> ?p ?o.
+    filter (contains(str(?o), "well-known/genid")) .
+    ?o ?op ?oo. 
+    filter (contains(str(?oo), "well-known/genid")) .
+    ?oo ?oop ?ooo. 
+  } union {
+    <SUBJECT> ?p ?o.
+    ?o a skos:Concept.
+    ?o ?skosconceptp ?skosconcepto.
+  }   UNION {
+        ?ss ?pp <SUBJECT>
+        OPTIONAL {
+         {
+           filter isblank(?ss).
+         }
+         union {
+           filter (contains(str(?ss), "well-known/genid")) .
+         }
+         ?ss ?sp ?so.
+         OPTIONAL {
+          ?so a skos:Concept.
+          ?so skos:prefLabel ?label.
+        }
+        }
+    }
+   
+}
